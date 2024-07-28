@@ -9,6 +9,6 @@ exports.handleUserMessage = async (req, res) => {
     const botResponse = await getBotResponse(userMessage);
     res.json({ response: botResponse });
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error.' });
+    next(error);
   }
 };
