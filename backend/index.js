@@ -1,28 +1,32 @@
-require('dotenv').config();
-const express = require('express');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-const chatbotRoutes = require('./routes/chatBotRoutes');
-const configRoutes = require('./routes/configRoutes');
-const cors = require('cors');
+require("dotenv").config();
+const express = require("express");
+const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+const chatbotRoutes = require("./routes/chatBotRoutes");
+const cors = require("cors");
+const config = require("./config");
+const logger = require("./middleware/logger");
+const errorHandler = require("./middleware/errorHandler");
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = config.port;
 
 app.use(bodyParser.json());
 app.use(cors());
+app.use(logger);
 
-const dbURI = process.env.MONGODB_URI;
-mongoose.connect(dbURI)
-  .then(() => console.log('Connected to MongoDB'))
+const dbURI = config.dbURI;
+mongoose
+  .connect(dbURI)
+  .then(() => console.log("Connected to MongoDB"))
   .catch(err => console.log(err));
 
-app.use('/api', chatbotRoutes);
-app.use('/api/config', configRoutes);
+app.use("/api", chatbotRoutes);
 
-app.get('/', (req, res) => {
-  res.send('Chatbot Server is Running');
+app.get("/", (req, res) => {
+  res.send("Chatbot Server is Running");
 });
+app.use(errorHandler);
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
