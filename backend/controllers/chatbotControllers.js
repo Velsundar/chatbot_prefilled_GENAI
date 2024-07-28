@@ -1,9 +1,10 @@
-const getBotResponse = require('../chatbot');
+const getBotResponse = require("../chatbot");
+const CustomError = require("../utils/customError");
 
 exports.handleUserMessage = async (req, res) => {
   const userMessage = req.body.message;
   if (!userMessage) {
-    return res.status(400).json({ error: 'Request body must contain a message.' });
+    throw new CustomError(400, "Request body must contain a message.");
   }
   try {
     const botResponse = await getBotResponse(userMessage);
