@@ -4,6 +4,9 @@ const stringSimilarity = require('string-similarity');
 
 
 async function getBotResponse(message) {
+  if (!message) {
+    throw new Error('Message is required');
+  }
   const allQuestions = await Question.find({});
   const config = await configSchema.findOne();
   const chatbotName = config ? config.chatbotName : 'EVA';
