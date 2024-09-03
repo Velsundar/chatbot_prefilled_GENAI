@@ -10,10 +10,11 @@ exports.generateContent = async (req, res) => {
   try {
     const { prompt, message, chatId } = req.body;
     const input = prompt || message;
-    let chat = await Chat.findOne({ chatId });
+    const userId = req.userId;
+    let chat = await Chat.findOne({ chatId, userId });
     // Create a new chat if not found
     if (!chat) {
-      chat = new Chat({ chatId, history: [] });
+      chat = new Chat({ chatId, userId, history: [] });
     }
     // Check if the same request exists in history
     const encodedInput = encodeBase64(input);
